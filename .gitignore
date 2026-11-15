@@ -1,0 +1,33 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment Variables
+.env
+
+# Testing
+.pytest_cache/
+.coverage
+
+# Build Files
+build/
+dist/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# GPU / CUDA
+*.ptx
+*.cubin
