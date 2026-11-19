@@ -1,0 +1,9 @@
+>seq1_forward_target Synthetic locus with forward SpCas9 PAM (AGG)
+ATCGTCGATCGATCGATCGATCAAGGTTTT
+>seq2_reverse_target Synthetic locus with reverse SpCas9 PAM (CCN -> TGG)
+TTTTCCATGATCGATCGATCGATCGACATAT
+>seq3_dual_target Dual-strand locus with forward (TGG) and reverse (CGG) targets
+ACGTACGTACGTACGTACGTTGGATATCCGAAAAAAAAAAAAAAAAAAAA
+>seq4_no_pam Negative control locus with no PAM sites on either strand
+ATATATATATATATATATATATATATATATATATATATATATATATATA
+

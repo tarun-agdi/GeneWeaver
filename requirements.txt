@@ -1,0 +1,5 @@
+# GeneWeaver: GPU-Accelerated CRISPR Alignment Engine
+# Minimal dependencies for development and testing
+
+pytest>=8.0.0
+
