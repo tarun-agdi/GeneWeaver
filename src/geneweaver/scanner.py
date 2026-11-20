@@ -8,6 +8,8 @@ from geneweaver.models import CandidateResult
 from geneweaver.sequence import VALID_DNA_BASES, reverse_complement, validate_dna_sequence
 
 __all__ = [
+    "find_forward_pams",
+    "scan_forward_pams",
     "find_pam_candidates",
     "find_spcas9_candidates",
 ]
@@ -20,6 +22,41 @@ def _is_spcas9_pam(pam_window: str) -> bool:
         and pam_window[1:] == "GG"
         and pam_window[0] in VALID_DNA_BASES
     )
+
+
+def find_forward_pams(sequence: str) -> List[dict]:
+    """Scan the forward strand of a DNA sequence for SpCas9 NGG PAM sites.
+
+    Identifies all occurrences of the NGG pattern on the forward strand,
+    where N is any valid canonical DNA base (A, C, G, or T). Reuses
+    the project's sequence validation to normalize case and RNA uracil,
+    and reject invalid characters.
+
+    Args:
+        sequence: The DNA nucleotide sequence string to scan.
+
+    Returns:
+        List of dicts with keys:
+            - 'pam': The 3-nucleotide PAM sequence string.
+            - 'position': The 0-based starting index in the sequence.
+
+    Raises:
+        TypeError: If sequence is not a string.
+        ValueError: If sequence is empty or contains invalid characters.
+    """
+    normalized_seq = validate_dna_sequence(sequence)
+    results: List[dict] = []
+
+    for i in range(len(normalized_seq) - 2):
+        window = normalized_seq[i : i + 3]
+        if _is_spcas9_pam(window):
+            results.append({"pam": window, "position": i})
+
+    return results
+
+
+# Convenience alias
+scan_forward_pams = find_forward_pams
 
 
 def find_pam_candidates(
