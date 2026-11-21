@@ -10,6 +10,8 @@ from geneweaver.sequence import VALID_DNA_BASES, reverse_complement, validate_dn
 __all__ = [
     "find_forward_pams",
     "scan_forward_pams",
+    "extract_forward_protospacers",
+    "extract_forward_candidates",
     "find_pam_candidates",
     "find_spcas9_candidates",
 ]
@@ -57,6 +59,66 @@ def find_forward_pams(sequence: str) -> List[dict]:
 
 # Convenience alias
 scan_forward_pams = find_forward_pams
+
+
+def extract_forward_protospacers(
+    sequence: str, protospacer_len: int = 20
+) -> List[dict]:
+    """Extract candidate 20-nt protospacers immediately upstream of forward NGG PAMs.
+
+    Identifies forward-strand SpCas9 NGG PAMs and extracts the upstream protospacer.
+    Skips any PAM candidate where fewer than `protospacer_len` nucleotides are available upstream.
+
+    Args:
+        sequence: The DNA nucleotide sequence string to scan.
+        protospacer_len: Length of the protospacer to extract (default 20).
+
+    Returns:
+        List of dicts with keys:
+            - 'protospacer': The extracted 20-nucleotide protospacer string.
+            - 'pam': The 3-nucleotide PAM sequence string.
+            - 'start': 0-based start index of the protospacer (inclusive).
+            - 'end': 0-based end index of the protospacer (exclusive).
+            - 'pam_position': 0-based starting index of the PAM in the sequence.
+            - 'strand': Target strand ('+').
+
+    Raises:
+        TypeError: If sequence is not a string.
+        ValueError: If sequence is empty, contains invalid characters, or if
+            protospacer_len is not a positive integer.
+    """
+    if not isinstance(protospacer_len, int) or protospacer_len <= 0:
+        raise ValueError(f"protospacer_len must be a positive integer, got {protospacer_len}")
+
+    normalized_seq = validate_dna_sequence(sequence)
+    pams = find_forward_pams(normalized_seq)
+    results: List[dict] = []
+
+    for pam_info in pams:
+        p = pam_info["position"]
+        if p < protospacer_len:
+            continue
+
+        start = p - protospacer_len
+        end = p
+        protospacer = normalized_seq[start:end]
+
+        results.append(
+            {
+                "protospacer": protospacer,
+                "pam": pam_info["pam"],
+                "start": start,
+                "end": end,
+                "pam_position": p,
+                "strand": "+",
+            }
+        )
+
+    return results
+
+
+# Convenience alias
+extract_forward_candidates = extract_forward_protospacers
 
 
 def find_pam_candidates(
