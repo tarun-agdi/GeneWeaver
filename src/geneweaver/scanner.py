@@ -14,6 +14,8 @@ __all__ = [
     "extract_forward_candidates",
     "find_pam_candidates",
     "find_spcas9_candidates",
+    "detect_pam_candidates",
+    "scan_pam_candidates",
 ]
 
 
@@ -226,6 +228,8 @@ def find_pam_candidates(
     return all_candidates
 
 
-# Convenience alias matching assignment terminology
+# Convenience aliases matching assignment terminology
 find_spcas9_candidates = find_pam_candidates
+detect_pam_candidates = find_pam_candidates
+scan_pam_candidates = find_pam_candidates
 

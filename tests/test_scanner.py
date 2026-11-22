@@ -220,6 +220,8 @@ class TestCandidateResultCompatibility:
         assert c.coordinates == (0, 23)
         assert c.start == 0
         assert c.end == 23
+        assert c.start_position == 0
+        assert c.end_position == 23
         assert c.strand == "+"
         assert c.protospacer == "ACGTACGTACGTACGTACGT"
         assert c.pam == "TGG"

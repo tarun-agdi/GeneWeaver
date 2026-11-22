@@ -126,6 +126,16 @@ class CandidateResult:
         """0-based end coordinate in the reference sequence (exclusive)."""
         return self.coordinates[1]
 
+    @property
+    def start_position(self) -> int:
+        """0-based start coordinate in the reference sequence (inclusive). Alias for start."""
+        return self.coordinates[0]
+
+    @property
+    def end_position(self) -> int:
+        """0-based end coordinate in the reference sequence (exclusive). Alias for end."""
+        return self.coordinates[1]
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to a dictionary representation."""
         return {
@@ -133,6 +143,8 @@ class CandidateResult:
             "coordinates": self.coordinates,
             "start": self.start,
             "end": self.end,
+            "start_position": self.start_position,
+            "end_position": self.end_position,
             "strand": self.strand,
             "protospacer": self.protospacer,
             "pam": self.pam,

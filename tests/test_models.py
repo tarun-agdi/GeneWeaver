@@ -32,6 +32,8 @@ class TestCandidateResultValid:
         assert result.coordinates == (100, 123)
         assert result.start == 100
         assert result.end == 123
+        assert result.start_position == 100
+        assert result.end_position == 123
         assert result.strand == "+"
         assert result.protospacer == "ACGTACGTACGTACGTACGT"
         assert result.pam == "TGG"
@@ -105,6 +107,8 @@ class TestCandidateResultValid:
         assert data["coordinates"] == (0, 23)
         assert data["start"] == 0
         assert data["end"] == 23
+        assert data["start_position"] == 0
+        assert data["end_position"] == 23
         assert data["strand"] == "+"
         assert data["protospacer"] == "GGGGGGGGGGGGGGGGGGGG"
         assert data["pam"] == "GGG"
