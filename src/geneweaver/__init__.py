@@ -20,6 +20,15 @@ The package is designed with modularity and extensibility
 in mind, allowing CPU and GPU execution backends.
 """
 
+from geneweaver.alignment import (
+    DEFAULT_GUIDE_LENGTH,
+    align_candidate_cpu,
+    align_candidates_cpu,
+    align_fasta_cpu,
+    align_protospacer_cpu,
+    search_and_align_cpu,
+    validate_guide_sequence,
+)
 from geneweaver.models import CandidateResult
 from geneweaver.scanner import (
     detect_pam_candidates,
@@ -42,8 +51,10 @@ __version__ = "0.1.0"
 
 __all__ = [
     "CandidateResult",
+    "DEFAULT_GUIDE_LENGTH",
     "VALID_DNA_BASES",
     "validate_dna_sequence",
+    "validate_guide_sequence",
     "reverse_complement",
     "read_fasta",
     "find_forward_pams",
@@ -54,4 +65,9 @@ __all__ = [
     "find_spcas9_candidates",
     "detect_pam_candidates",
     "scan_pam_candidates",
+    "align_protospacer_cpu",
+    "align_candidate_cpu",
+    "align_candidates_cpu",
+    "search_and_align_cpu",
+    "align_fasta_cpu",
 ]
