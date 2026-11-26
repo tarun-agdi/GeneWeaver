@@ -146,6 +146,18 @@ class TestValidationErrors:
         with pytest.raises(TypeError, match="CandidateResult instance"):
             align_candidate_cpu(self.VALID_20, {"protospacer": self.VALID_20})  # type: ignore[arg-type]
 
+    def test_invalid_expected_length_rejected(self):
+        for bad_len in (0, -5, True, "20"):
+            with pytest.raises(ValueError, match="expected_length must be a positive integer"):
+                validate_guide_sequence(self.VALID_20, expected_length=bad_len)  # type: ignore[arg-type]
+
+    def test_invalid_candidates_iterable_rejected(self):
+        with pytest.raises(TypeError, match="candidates must be an iterable"):
+            align_candidates_cpu(self.VALID_20, None)  # type: ignore[arg-type]
+
+        with pytest.raises(TypeError, match="candidates must be an iterable"):
+            align_candidates_cpu(self.VALID_20, self.VALID_20)  # type: ignore[arg-type]
+
 
 class TestCandidateResultIntegration:
     """Tests for CandidateResult alignment, metadata preservation, and immutability."""
@@ -223,6 +235,25 @@ class TestCandidateResultIntegration:
         assert align_candidates_cpu(self.GUIDE, []) == []
         with pytest.raises(ValueError, match="exactly 20 nucleotides"):
             align_candidates_cpu("ACGT", [])
+
+    def test_realigning_already_aligned_candidate_replaces_metrics(self):
+        already_aligned = CandidateResult(
+            sequence_id="s1",
+            coordinates=(0, 23),
+            strand="+",
+            protospacer=self.GUIDE,
+            pam="AGG",
+            mismatch_count=2,
+            mismatch_positions=(0, 1),
+            score=16.0,
+        )
+        realigned = align_candidate_cpu(self.GUIDE, already_aligned)
+        assert realigned.mismatch_count == 0
+        assert realigned.mismatch_positions == ()
+        assert realigned.score == 20.0
+        # Original stays untouched
+        assert already_aligned.mismatch_count == 2
+        assert already_aligned.score == 16.0
 
 
 class TestEndToEndCpuPipeline:

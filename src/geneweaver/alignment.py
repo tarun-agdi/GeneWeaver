@@ -12,6 +12,7 @@ Note:
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
 from typing import List, Sequence, Tuple, Union
 
@@ -184,10 +185,16 @@ def align_candidates_cpu(
         candidates: Sequence of ``CandidateResult`` objects to align.
         expected_length: Expected protospacer/guide length (default 20).
 
-    Returns:
-        List of new ``CandidateResult`` instances with updated mismatch metrics and scores.
+    Raises:
+        TypeError: If ``guide`` is not a string or ``candidates`` is not an iterable
+            of ``CandidateResult`` objects.
+        ValueError: If ``guide`` or any candidate protospacer fails validation.
     """
     norm_guide = validate_guide_sequence(guide, expected_length=expected_length)
+    if isinstance(candidates, (str, bytes)) or not isinstance(candidates, Iterable):
+        raise TypeError(
+            f"candidates must be an iterable of CandidateResult instances, got {type(candidates).__name__}"
+        )
     return [
         align_candidate_cpu(norm_guide, candidate, expected_length=expected_length)
         for candidate in candidates
